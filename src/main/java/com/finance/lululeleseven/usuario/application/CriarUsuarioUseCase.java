@@ -18,15 +18,14 @@ public class CriarUsuarioUseCase {
     private final PasswordEncoder passwordEncoder;
     private final UsuarioMapper usuarioMapper;
 
-    public UsuarioDto execute(RegistroDto dto) {
-        var usuarioBanco = repoUsuario.findByNomUsuario(NomeUsuario.de(dto.getNome()));
+    public Usuario execute(RegistroDto dto) {
+        var usuarioBanco = repoUsuario.findByNomUsuario(NomeUsuario.de(dto.nome().valor()));
         if (usuarioBanco.isPresent()) {
             throw new RuntimeException("Não é possível registrar o usuário, pois o nome de usuário já está em uso!");
         }
 
-        var usuario = Usuario.criar(dto.getNome(), dto.getEmail(), dto.getSenha(), passwordEncoder);
-        var usuarioSalvo = repoUsuario.save(usuario);
+        var usuario = Usuario.criar(dto.nome().valor(), dto.email().valor(), dto.senha(), passwordEncoder);
 
-        return usuarioMapper.toDto(usuarioSalvo);
+        return repoUsuario.save(usuario);
     }
 }

@@ -1,13 +1,11 @@
 package com.finance.lululeleseven.perfil.application.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.finance.lululeleseven.shared.exception.DomainException;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class PerfilDto {
-    private Long codPerfil;
-    private String nome;
+public record PerfilDto(String nome) {
+    public PerfilDto {
+        if (nome == null || nome.isBlank()) {
+            throw new DomainException("Perfil deve ser informado");
+        }
+    }
 }

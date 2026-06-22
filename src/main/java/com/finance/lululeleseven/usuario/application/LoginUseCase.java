@@ -1,11 +1,11 @@
 package com.finance.lululeleseven.usuario.application;
 
+import com.finance.lululeleseven.refreshtoken.application.CriaRefreshTokenUseCase;
 import com.finance.lululeleseven.shared.infrastructure.security.TokenService;
 import com.finance.lululeleseven.usuario.application.dto.LoginDto;
 import com.finance.lululeleseven.usuario.application.dto.UsuarioDto;
 import com.finance.lululeleseven.usuario.domain.IUsuarioRepository;
 import com.finance.lululeleseven.usuario.domain.vo.NomeUsuario;
-import com.finance.lululeleseven.usuario.infrastructure.UsuarioMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,14 +22,14 @@ public class LoginUseCase {
     private final IUsuarioRepository repoUsuario;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
-    private final UsuarioMapper usuarioMapper;
+    private final CriaRefreshTokenUseCase rTokenUseCase;
 
     public UsuarioDto execute(LoginDto login) {
         // Authenticate user credentials
-        atuhManager.authenticate(new UsernamePasswordAuthenticationToken(login.getNomeUsuario(), login.getSenha()));
+        atuhManager.authenticate(new UsernamePasswordAuthenticationToken(login.nomeUsuario().valor(), login.senha()));
 
         // Fetch user by username (LoginDto.nomeUsuario maps to Usuario.nomUsuario)
-        var usuarioBanco = repoUsuario.findByNomUsuario(NomeUsuario.de(login.getNomeUsuario()))
+        var usuarioBanco = repoUsuario.findByNomUsuario(NomeUsuario.de(login.nomeUsuario().valor()))
                 .orElseThrow(() -> new UsernameNotFoundException("Nome de Usuário não encontrado!"));
 
         // Extrai perfis e valida
@@ -37,17 +37,15 @@ public class LoginUseCase {
             throw new RuntimeException("Usuário não possui perfis!");
         }
 
-        if (!usuarioBanco.validarSenha(login.getSenha(), passwordEncoder)) {
+        if (!usuarioBanco.validarSenha(login.senha(), passwordEncoder)) {
             throw new AuthenticationCredentialsNotFoundException("Nome de Usuário ou Senha invalido!");
         }
 
-        var accessToken = tokenService.generateAccessToken(login.getNomeUsuario(), usuarioBanco.getPerfis());
-        var refreshToken = tokenService.generateRefreshToken(login.getNomeUsuario());
+        var accessToken = tokenService.generateAccessToken(login.nomeUsuario().valor(), usuarioBanco.getPerfis());
+        var refreshToken = tokenService.generateRefreshToken(login.nomeUsuario().valor());
 
-        var usuarioDto = usuarioMapper.toDto(usuarioBanco);
-        usuarioDto.setRefreshToken(refreshToken);
-        usuarioDto.setAccessToken(accessToken);
+        rTokenUseCase.execute(refreshToken);
 
-        return usuarioDto;
+        return UsuarioDto.de(usuarioBanco, accessToken, refreshToken);
     }
 }

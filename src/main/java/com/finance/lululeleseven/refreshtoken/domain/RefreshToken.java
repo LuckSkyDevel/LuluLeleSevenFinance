@@ -3,9 +3,11 @@ package com.finance.lululeleseven.refreshtoken.domain;
 import com.finance.lululeleseven.refreshtoken.domain.vo.CodRefreshToken;
 import com.finance.lululeleseven.refreshtoken.domain.vo.Dispositivo;
 import com.finance.lululeleseven.usuario.domain.Usuario;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Getter
 public class RefreshToken {
     private CodRefreshToken codRefreshToken;
     private String token;

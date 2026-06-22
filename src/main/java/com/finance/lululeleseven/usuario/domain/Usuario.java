@@ -2,6 +2,7 @@ package com.finance.lululeleseven.usuario.domain;
 
 import com.finance.lululeleseven.usuario.domain.vo.CodUsuario;
 import com.finance.lululeleseven.usuario.domain.vo.Email;
+import com.finance.lululeleseven.usuario.domain.vo.NomeUsuario;
 import com.finance.lululeleseven.usuario.domain.vo.Senha;
 import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,7 +13,7 @@ import java.util.List;
 @Getter
 public class Usuario {
     private CodUsuario codUsuario;
-    private String nome;
+    private NomeUsuario nome;
     private Email email;
     private Senha senha;
     private List<String> perfis;
@@ -21,7 +22,7 @@ public class Usuario {
     // construtor para novo usuário
     public static Usuario criar(String nome, String email, String senha, PasswordEncoder encoder) {
         var usuario = new Usuario();
-        usuario.nome = nome;
+        usuario.nome = NomeUsuario.de(nome);
         usuario.email = Email.de(email);
         usuario.senha = Senha.criar(senha, encoder);
         usuario.dataCriacao = LocalDate.now();
@@ -36,7 +37,7 @@ public class Usuario {
     ) {
         var usuario = new Usuario();
         usuario.codUsuario = CodUsuario.de(codUsuario);
-        usuario.nome = nome;
+        usuario.nome = NomeUsuario.de(nome);
         usuario.email = Email.de(email);
         usuario.senha = Senha.doBanco(senhaHash);
         usuario.perfis = perfis;
@@ -48,7 +49,6 @@ public class Usuario {
     public boolean validarSenha(String senhaPura, PasswordEncoder encoder) {
         return this.senha.confere(senhaPura, encoder);
     }
-
 
 
     public void adicionarPerfil(String perfil) {

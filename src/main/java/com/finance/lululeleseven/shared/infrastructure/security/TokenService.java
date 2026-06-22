@@ -83,4 +83,8 @@ public class TokenService {
                 .expiration(exp)
                 .signWith(key).compact();
     }
+
+    public Long getRefreshExpiration() {
+        return refreshExpiration;
+    }
 }
