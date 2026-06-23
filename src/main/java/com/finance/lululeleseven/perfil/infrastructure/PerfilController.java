@@ -7,7 +7,6 @@ import com.finance.lululeleseven.perfil.application.RecuperaPerfilUseCase;
 import com.finance.lululeleseven.perfil.application.dto.PerfilDto;
 import com.finance.lululeleseven.perfil.domain.Perfil;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
