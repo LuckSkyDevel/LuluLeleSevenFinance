@@ -1,0 +1,15 @@
+package com.finance.leluseven.perfil.domain.vo;
+
+import com.finance.leluseven.shared.exception.DomainException;
+
+public record CodPerfil(Long valor) {
+    public CodPerfil {
+        if(valor == null || valor <= 0) {
+            throw new DomainException("Código Perfil Invalido");
+        }
+    }
+
+    public static CodPerfil de(Long valor) {
+        return new CodPerfil(valor);
+    }
+}

@@ -1,4 +1,4 @@
-# 💰 LululeleSevenFinance Dashboard — Spring Boot + Plaid + DDD
+# 💰 LeLu Seven Finance Dashboard — Spring Boot + Plaid + DDD
 
 Sistema de dashboard financeiro integrado com instituições bancárias via **Plaid API**, construído com **Spring Boot**, autenticação **JWT**, **Clean Architecture** e **DDD**.
 
@@ -233,12 +233,12 @@ A API estará disponível em `http://localhost:8080`
 
 ### Autenticação
 
-| Método | Rota | Auth | Descrição |
-|---|---|---|---|
-| POST | `/api/auth/register` | — | Cadastro |
-| POST | `/api/auth/login` | — | Login |
-| POST | `/api/auth/refresh` | Refresh Token | Renovar tokens |
-| POST | `/api/auth/logout` | Bearer Token | Logout |
+| Método | Rota                         | Auth | Descrição |
+|---|------------------------------|---|---|
+| POST | `/api/auth/registra-usuario` | — | Cadastro |
+| POST | `/api/auth/login`            | — | Login |
+| POST | `/api/auth/refresh`          | Refresh Token | Renovar tokens |
+| POST | `/api/auth/logout`           | Bearer Token | Logout |
 
 ### Plaid
 
@@ -284,7 +284,7 @@ A API estará disponível em `http://localhost:8080`
 ### Cadastro
 
 ```bash
-curl -X POST http://localhost:8080/api/auth/register \
+curl -X POST http://localhost:8080/api/auth/registra-usuario \
   -H "Content-Type: application/json" \
   -d '{
     "nome": "João Silva",
@@ -299,7 +299,7 @@ curl -X POST http://localhost:8080/api/auth/register \
 curl -X POST http://localhost:8080/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "joao@email.com",
+    "nomeUsuario": "joaoX",
     "senha": "senha123"
   }'
 ```
@@ -375,6 +375,7 @@ docker compose down
 - ✅ Histórico de transações
 - ✅ Sincronização automática com o banco
 - ✅ Suporte a múltiplas contas bancárias
+- ✅ Swagger / OpenAPI
 - 🔜 Projeção de gastos futuros
 - 🔜 Alertas de gastos
 - 🔜 Metas financeiras
@@ -383,7 +384,6 @@ docker compose down
 
 ## 🗺️ Próximos passos
 
-- [ ] Adicionar Swagger / OpenAPI
 - [ ] Implementar cache com Redis
 - [ ] Adicionar testes unitários e de integração
 - [ ] CI/CD com GitHub Actions
