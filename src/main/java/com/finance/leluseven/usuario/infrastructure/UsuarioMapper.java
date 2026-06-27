@@ -16,6 +16,8 @@ public class UsuarioMapper {
                 entity.getDesEmail(),
                 entity.getSenhaHash(),
                 perfis,
+                entity.getPlaidAccessToken(),
+                entity.getPlaidItemId(),
                 entity.getDatCriacao()
         );
     }
@@ -26,6 +28,8 @@ public class UsuarioMapper {
         entity.setNomUsuario(domain.getNome().valor());
         entity.setDesEmail(domain.getEmail().valor());
         entity.setSenhaHash(domain.getSenha().hash());
+        entity.setPlaidAccessToken(domain.getPlaidAccessToken());
+        entity.setPlaidItemId(domain.getPlaidItemId());
         entity.setDatCriacao(domain.getDataCriacao());
         return entity;
     }

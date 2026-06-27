@@ -1,4 +1,4 @@
 package com.finance.leluseven.transacao.domain.vo;
 
-public record TransacaoCod() {
+public record CodTransacao() {
 }

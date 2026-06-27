@@ -4,6 +4,7 @@ import com.finance.leluseven.usuario.domain.vo.CodUsuario;
 import com.finance.leluseven.usuario.domain.vo.NomeUsuario;
 import com.finance.leluseven.usuario.domain.Usuario;
 import com.finance.leluseven.usuario.domain.IUsuarioRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -40,5 +41,17 @@ public class UsuarioJpaRepositoryImpl implements IUsuarioRepository {
     @Override
     public Usuario save(Usuario usuario) {
         return mapper.toDomain(jpa.save(mapper.toEntity(usuario)));
+    }
+
+    @Transactional
+    @Override
+    public void updatePlaidToken(CodUsuario codigo, String accessToken, String itemId) {
+        jpa.updatePlaidToken(codigo.valor(), accessToken, itemId);
+    }
+
+    @Transactional
+    @Override
+    public void removerPlaidToken(CodUsuario codigo) {
+        jpa.removerPlaidToken(codigo.valor());
     }
 }

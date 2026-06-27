@@ -1,5 +1,6 @@
 package com.finance.leluseven.usuario.domain;
 
+import com.finance.leluseven.shared.exception.DomainException;
 import com.finance.leluseven.usuario.domain.vo.CodUsuario;
 import com.finance.leluseven.usuario.domain.vo.Email;
 import com.finance.leluseven.usuario.domain.vo.NomeUsuario;
@@ -17,6 +18,8 @@ public class Usuario {
     private Email email;
     private Senha senha;
     private List<String> perfis;
+    private String plaidAccessToken;
+    private String plaidItemId;
     private LocalDate dataCriacao;
 
     // construtor para novo usuário
@@ -31,9 +34,8 @@ public class Usuario {
     }
 
     // construtor para reconstituir do banco
-    public static Usuario reconstituir(
-            Long codUsuario, String nome, String email,
-            String senhaHash, List<String> perfis, LocalDate dataCriacao
+    public static Usuario reconstituir(Long codUsuario, String nome, String email, String senhaHash, List<String> perfis,
+                                       String plaidAccessToken, String plaidItemId, LocalDate dataCriacao
     ) {
         var usuario = new Usuario();
         usuario.codUsuario = CodUsuario.de(codUsuario);
@@ -41,6 +43,8 @@ public class Usuario {
         usuario.email = Email.de(email);
         usuario.senha = Senha.doBanco(senhaHash);
         usuario.perfis = perfis;
+        usuario.plaidAccessToken = plaidAccessToken;
+        usuario.plaidItemId = plaidItemId;
         usuario.dataCriacao = dataCriacao;
         return usuario;
     }
@@ -50,9 +54,25 @@ public class Usuario {
         return this.senha.confere(senhaPura, encoder);
     }
 
-
     public void adicionarPerfil(String perfil) {
         if (!this.perfis.contains(perfil))
             this.perfis.add(perfil);
+    }
+
+    public void vincularPlaid(String accessToken, String itemId) {
+        if (accessToken == null || accessToken.isBlank())
+            throw new DomainException("Access token inválido");
+
+        this.plaidAccessToken = accessToken;
+        this.plaidItemId      = itemId;
+    }
+
+    public void desvincularPlaid() {
+        this.plaidAccessToken = null;
+        this.plaidItemId      = null;
+    }
+
+    public boolean temPlaidVinculado() {
+        return plaidAccessToken != null && !plaidAccessToken.isBlank();
     }
 }
