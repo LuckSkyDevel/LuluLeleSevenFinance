@@ -3,6 +3,7 @@ package com.finance.leluseven.plaid.infrastructure;
 import com.finance.leluseven.plaid.domain.ContaBancaria;
 import com.finance.leluseven.plaid.domain.IPlaidRepository;
 import com.finance.leluseven.plaid.domain.vo.PlaidToken;
+import com.finance.leluseven.plaid.domain.vo.SyncResult;
 import com.finance.leluseven.shared.exception.DomainException;
 import com.finance.leluseven.transacao.domain.Transacao;
 import com.plaid.client.model.*;
@@ -100,12 +101,41 @@ public class PlaidRepositoryImpl implements IPlaidRepository {
             if (response.body() == null)
                 throw new AssertionError("Ocorreu um erro inesperado durante a transação!");
 
-            return response.body().getTransactions().stream()
-                    .map(this::toTransacao)
-                    .toList();
+            return response.body().getTransactions().stream().map(this::toTransacao).toList();
 
         } catch (IOException e) {
             throw new DomainException("Erro ao listar transações: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public SyncResult sincronizarTransacoes(PlaidToken plaidToken, String cursor) {
+        try {
+            var request = new TransactionsSyncRequest().accessToken(plaidToken.accessToken());
+
+            if (cursor != null) {
+                request.cursor(cursor);
+            }
+
+            var response = plaidApi.transactionsSync(request).execute();
+            var body = response.body();
+
+            var adicionadas = body.getAdded().stream().map(this::toTransacao).toList();
+
+            var modificadas = body.getModified().stream().map(this::toTransacao).toList();
+
+            var removidasIds = body.getRemoved().stream().map(RemovedTransaction::getTransactionId).toList();
+
+            return new SyncResult(
+                    adicionadas,
+                    modificadas,
+                    removidasIds,
+                    body.getNextCursor(),
+                    body.getHasMore()
+            );
+
+        } catch (IOException e) {
+            throw new DomainException("Erro ao sincronizar transações: " + e.getMessage());
         }
     }
 
@@ -120,7 +150,7 @@ public class PlaidRepositoryImpl implements IPlaidRepository {
                 raw.getName(),
                 new BigDecimal(raw.getAmount()),
                 raw.getDate(),
-                raw.getCategory().stream().findFirst().get()
+                raw.getCategory() != null ? raw.getCategory().get(0) : "Outros"
         );
     }
 }

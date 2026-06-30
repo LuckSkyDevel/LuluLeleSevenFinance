@@ -51,6 +51,9 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "str_plaid_item_id")
     private String plaidItemId;
 
+    @Column(name = "str_plaid_cursor")
+    private String plaidCursor;
+
     @Column(name = "dat_criacao")
     private LocalDate datCriacao = LocalDate.now();
 

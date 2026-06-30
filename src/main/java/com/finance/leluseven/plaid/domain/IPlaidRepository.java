@@ -1,6 +1,7 @@
 package com.finance.leluseven.plaid.domain;
 
 import com.finance.leluseven.plaid.domain.vo.PlaidToken;
+import com.finance.leluseven.plaid.domain.vo.SyncResult;
 import com.finance.leluseven.transacao.domain.Transacao;
 
 import java.time.LocalDate;
@@ -11,4 +12,5 @@ public interface IPlaidRepository {
     PlaidToken trocarPublicToken(String publicToken);
     List<ContaBancaria> listarContas(PlaidToken accessToken);
     List<Transacao> listarTransacoes(PlaidToken accessToken, LocalDate inicio, LocalDate fim);
+    SyncResult sincronizarTransacoes(PlaidToken accessToken, String cursor);
 }

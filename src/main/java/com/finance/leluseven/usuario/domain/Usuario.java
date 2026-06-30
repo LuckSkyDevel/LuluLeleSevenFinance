@@ -20,6 +20,7 @@ public class Usuario {
     private List<String> perfis;
     private String plaidAccessToken;
     private String plaidItemId;
+    private String plaidCursor;
     private LocalDate dataCriacao;
 
     // construtor para novo usuário
@@ -74,5 +75,9 @@ public class Usuario {
 
     public boolean temPlaidVinculado() {
         return plaidAccessToken != null && !plaidAccessToken.isBlank();
+    }
+
+    public void atualizarPlaidCursor(String cursor) {
+        this.plaidCursor = cursor;
     }
 }

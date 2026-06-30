@@ -2,7 +2,7 @@ package com.finance.leluseven.plaid.infrastructure;
 
 import com.finance.leluseven.plaid.application.CriarLinkTokenUseCase;
 import com.finance.leluseven.plaid.application.ListarContasUseCase;
-import com.finance.leluseven.plaid.application.ListarTransacoesUseCase;
+import com.finance.leluseven.plaid.application.ListarTransacoesPlaidUseCase;
 import com.finance.leluseven.plaid.application.TrocarPublicTokenUseCase;
 import com.finance.leluseven.plaid.domain.ContaBancaria;
 import com.finance.leluseven.transacao.domain.Transacao;
@@ -23,7 +23,7 @@ public class PlaidController {
     private final CriarLinkTokenUseCase criarLinkTokenUseCase;
     private final TrocarPublicTokenUseCase trocarPublicTokenUseCase;
     private final ListarContasUseCase listarContasUseCase;
-    private final ListarTransacoesUseCase listarTransacoesUseCase;
+    private final ListarTransacoesPlaidUseCase listarTransacoesUseCase;
 
     @GetMapping("/link-token")
     public Map<String, String> criarLinkToken(@AuthenticationPrincipal String userId) {
